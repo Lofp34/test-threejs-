@@ -1,50 +1,82 @@
 import * as THREE from 'three';
 
-const stages = [
-  { name: 'Prospects', count: 48, value: '312 k€', conversion: '—', action: 12, progress: 25, color: 0x2aabee, tip: '12 prospects sont sans prochaine action planifiée.' },
-  { name: 'RDV', count: 21, value: '184 k€', conversion: '44 %', action: 5, progress: 50, color: 0x56c2ff, tip: '5 rendez-vous nécessitent une préparation ou une relance.' },
-  { name: 'Offres', count: 9, value: '97 k€', conversion: '43 %', action: 3, progress: 75, color: 0xa17cff, tip: '3 offres arrivent à échéance dans les prochains jours.' },
-  { name: 'Gagnés', count: 4, value: '41 k€', conversion: '44 %', action: 1, progress: 100, color: 0x54d68a, tip: '1 nouveau client attend son passage en onboarding.' }
+const interests = [
+  {
+    title: 'IA générative',
+    icon: '✦',
+    color: 0x7b8cff,
+    text: 'Comprendre les modèles, tester les usages réels et transformer l’IA en avantage opérationnel.',
+    tags: ['LLM', 'cas d’usage', 'expérimentation']
+  },
+  {
+    title: 'Vente & développement',
+    icon: '↗',
+    color: 0x20d6a5,
+    text: 'Transformer le chaos commercial en système simple, mesurable et entraînable pour faire progresser les équipes.',
+    tags: ['vente B2B', 'coaching', 'process']
+  },
+  {
+    title: 'Agents & automatisation',
+    icon: '◎',
+    color: 0x25b9f5,
+    text: 'Créer des agents qui travaillent vraiment : CRM, prospection, organisation, production et workflows métier.',
+    tags: ['agents IA', 'OpenClaw', 'workflows']
+  },
+  {
+    title: 'Tech & code',
+    icon: '</>',
+    color: 0xf39b45,
+    text: 'Construire rapidement des applications utiles, connecter les API et faire passer une idée du prototype à la production.',
+    tags: ['GitHub', 'Vercel', 'API']
+  },
+  {
+    title: 'Créer & transmettre',
+    icon: '◈',
+    color: 0xf264a8,
+    text: 'Partager ce qui fonctionne, former par la pratique et créer du contenu à partir d’expériences concrètes.',
+    tags: ['formation', 'contenu', 'build in public']
+  },
+  {
+    title: 'Voile & nautisme',
+    icon: '≈',
+    color: 0x64d8ff,
+    text: 'La mer comme terrain de progression : navigation, technique, météo, bateaux et plaisir d’apprendre par la pratique.',
+    tags: ['voile', 'navigation', 'bateaux']
+  }
 ];
 
 const els = {
   canvas: document.querySelector('#scene'),
   sceneCard: document.querySelector('#sceneCard'),
-  stagePill: document.querySelector('#stagePill'),
-  stageTitle: document.querySelector('#stageTitle'),
-  stageCount: document.querySelector('#stageCount'),
-  stageValue: document.querySelector('#stageValue'),
-  stageConversion: document.querySelector('#stageConversion'),
-  stageAction: document.querySelector('#stageAction'),
-  stageTip: document.querySelector('#stageTip'),
-  progressBar: document.querySelector('#progressBar'),
+  interestPill: document.querySelector('#interestPill'),
+  interestIcon: document.querySelector('#interestIcon'),
+  interestTitle: document.querySelector('#interestTitle'),
+  interestNumber: document.querySelector('#interestNumber'),
+  interestText: document.querySelector('#interestText'),
+  tagList: document.querySelector('#tagList'),
   runtimeBadge: document.querySelector('#runtimeBadge'),
   resetButton: document.querySelector('#resetButton'),
-  telegramButton: document.querySelector('#telegramButton'),
+  exploreButton: document.querySelector('#exploreButton'),
   toast: document.querySelector('#toast')
 };
 
 const tg = window.Telegram?.WebApp;
 const inTelegram = Boolean(tg?.initData);
-
 if (tg) {
   tg.ready();
   tg.expand();
   try {
-    tg.setHeaderColor('#07111f');
-    tg.setBackgroundColor('#07111f');
-    if (tg.isVersionAtLeast?.('8.0')) tg.lockOrientation?.();
+    tg.setHeaderColor('#050816');
+    tg.setBackgroundColor('#050816');
   } catch (_) {}
 }
-
-els.runtimeBadge.textContent = inTelegram ? `Telegram · ${tg.platform || 'mobile'}` : 'Safari · démo';
-els.telegramButton.textContent = inTelegram ? 'Envoyer au bot' : 'Simuler Telegram';
+els.runtimeBadge.textContent = inTelegram ? `Telegram · ${tg.platform || 'mobile'}` : 'iPhone · Web';
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x07111f, 0.12);
+scene.fog = new THREE.FogExp2(0x050816, 0.082);
 
-const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-camera.position.set(0, 0.15, 8.2);
+const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
+camera.position.set(0, 0.25, 8.5);
 
 const renderer = new THREE.WebGLRenderer({
   canvas: els.canvas,
@@ -57,134 +89,243 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(0x000000, 0);
 
-const root = new THREE.Group();
-scene.add(root);
+scene.add(new THREE.AmbientLight(0xc8d7ff, 1.2));
+const key = new THREE.DirectionalLight(0xffffff, 3.4);
+key.position.set(4, 6, 7);
+scene.add(key);
+const blueRim = new THREE.PointLight(0x536dff, 28, 18, 2);
+blueRim.position.set(-3, 1.5, 3.5);
+scene.add(blueRim);
 
-scene.add(new THREE.AmbientLight(0xb9ddff, 1.4));
-const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-keyLight.position.set(4, 5, 7);
-scene.add(keyLight);
-const rimLight = new THREE.PointLight(0x2aabee, 22, 18, 2);
-rimLight.position.set(-4, -1, 3);
-scene.add(rimLight);
+const universe = new THREE.Group();
+universe.rotation.x = -0.08;
+universe.rotation.y = -0.35;
+scene.add(universe);
 
-const core = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(0.72, 2),
-  new THREE.MeshPhysicalMaterial({
-    color: 0x0e84bd,
-    roughness: 0.3,
-    metalness: 0.35,
-    clearcoat: 0.75,
-    clearcoatRoughness: 0.18,
-    emissive: 0x083c59,
-    emissiveIntensity: 0.72
-  })
-);
-root.add(core);
+function roundedPath(ctx, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+}
 
-const coreWire = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(0.83, 1),
-  new THREE.MeshBasicMaterial({ color: 0x72d4ff, wireframe: true, transparent: true, opacity: 0.23 })
-);
-root.add(coreWire);
-
-function makeLabel(text, count, color) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 160;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgba(5,13,24,.80)';
-  roundRect(ctx, 8, 8, 496, 144, 38);
-  ctx.fill();
-  ctx.strokeStyle = `#${color.getHexString()}`;
-  ctx.lineWidth = 4;
-  roundRect(ctx, 8, 8, 496, 144, 38);
-  ctx.stroke();
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 43px -apple-system, BlinkMacSystemFont, Arial';
-  ctx.fillText(text, 34, 67);
-  ctx.fillStyle = '#9eb0c7';
-  ctx.font = '600 31px -apple-system, BlinkMacSystemFont, Arial';
-  ctx.fillText(`${count} éléments`, 34, 113);
-
-  const texture = new THREE.CanvasTexture(canvas);
+function glowTexture(color = '#7b8cff') {
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(128, 128, 8, 128, 128, 128);
+  g.addColorStop(0, 'rgba(255,255,255,.95)');
+  g.addColorStop(.12, color);
+  g.addColorStop(.42, color.replace(')', ', .22)').replace('rgb', 'rgba'));
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 256, 256);
+  const texture = new THREE.CanvasTexture(c);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.minFilter = THREE.LinearFilter;
-  const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+  return texture;
+}
+
+function hexToRgb(hex) {
+  const c = new THREE.Color(hex);
+  return `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
+}
+
+function createGlow(hex, size, opacity = .55) {
+  const material = new THREE.SpriteMaterial({
+    map: glowTexture(hexToRgb(hex)),
+    transparent: true,
+    opacity,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(2.05, 0.64, 1);
+  sprite.scale.set(size, size, 1);
   return sprite;
 }
 
-function roundRect(ctx, x, y, w, h, r) {
-  const radius = Math.min(r, w / 2, h / 2);
+function makeLabel(title, index, color) {
+  const c = document.createElement('canvas');
+  c.width = 640;
+  c.height = 170;
+  const ctx = c.getContext('2d');
+  const colorCss = `#${new THREE.Color(color).getHexString()}`;
+
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.fillStyle = 'rgba(4,8,20,.82)';
+  roundedPath(ctx, 8, 8, 624, 154, 42);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,.11)';
+  ctx.lineWidth = 3;
+  roundedPath(ctx, 8, 8, 624, 154, 42);
+  ctx.stroke();
+
+  ctx.fillStyle = colorCss;
   ctx.beginPath();
-  ctx.roundRect(x, y, w, h, radius);
+  ctx.arc(50, 53, 12, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowColor = colorCss;
+  ctx.shadowBlur = 20;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 40px -apple-system, BlinkMacSystemFont, Arial';
+  ctx.fillText(title, 78, 66, 520);
+  ctx.fillStyle = '#8795ac';
+  ctx.font = '700 25px -apple-system, BlinkMacSystemFont, Arial';
+  ctx.fillText(`UNIVERS ${String(index + 1).padStart(2, '0')}`, 78, 112);
+
+  const texture = new THREE.CanvasTexture(c);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false }));
+  sprite.scale.set(2.35, .625, 1);
+  return sprite;
 }
 
-const stageMeshes = [];
-const stageGroups = [];
-const radius = 2.25;
+function makeCenterLabel() {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#fff';
+  ctx.font = '800 42px -apple-system, BlinkMacSystemFont, Arial';
+  ctx.fillText('LAURENT', 256, 56);
+  ctx.fillStyle = '#8e9bb2';
+  ctx.font = '700 22px -apple-system, BlinkMacSystemFont, Arial';
+  ctx.fillText('CURIOSITÉ → ACTION', 256, 92);
+  const texture = new THREE.CanvasTexture(c);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false }));
+  sprite.scale.set(2.35, .59, 1);
+  sprite.position.set(0, -1.05, .05);
+  return sprite;
+}
 
-stages.forEach((stage, i) => {
-  const angle = i * Math.PI * 0.5 + 0.55;
-  const group = new THREE.Group();
-  group.position.set(Math.cos(angle) * radius, (i - 1.5) * 0.72, Math.sin(angle) * radius * 0.48);
-  group.userData.baseY = group.position.y;
-  group.userData.stageIndex = i;
+const core = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(.8, 3),
+  new THREE.MeshStandardMaterial({
+    color: 0x4356d8,
+    emissive: 0x202d8b,
+    emissiveIntensity: 1.35,
+    roughness: .27,
+    metalness: .38
+  })
+);
+universe.add(core);
 
-  const color = new THREE.Color(stage.color);
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(0.52, 0.10, 14, 44),
-    new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.32, roughness: 0.28, metalness: 0.2 })
-  );
-  ring.rotation.x = Math.PI * 0.37;
-  ring.userData.stageIndex = i;
-  group.add(ring);
-  stageMeshes.push(ring);
+const coreWire = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(.96, 1),
+  new THREE.MeshBasicMaterial({ color: 0xa8b0ff, wireframe: true, transparent: true, opacity: .18 })
+);
+universe.add(coreWire);
+universe.add(createGlow(0x6574ff, 3.0, .28));
+universe.add(makeCenterLabel());
 
-  const orb = new THREE.Mesh(
-    new THREE.SphereGeometry(0.29, 20, 16),
-    new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: color, emissiveIntensity: 1.5, roughness: 0.22 })
-  );
-  orb.userData.stageIndex = i;
-  group.add(orb);
-  stageMeshes.push(orb);
-
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-    new THREE.Vector3(0, 0, 0),
-    root.worldToLocal(core.getWorldPosition(new THREE.Vector3())).sub(group.position)
-  ]);
-  const line = new THREE.Line(
-    lineGeometry,
-    new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.24 })
-  );
-  group.add(line);
-
-  const label = makeLabel(stage.name, stage.count, color);
-  label.position.set(0, -0.82, 0);
-  label.userData.stageIndex = i;
-  group.add(label);
-
-  stageGroups.push(group);
-  root.add(group);
+const orbitMaterial = new THREE.LineBasicMaterial({ color: 0x8190b7, transparent: true, opacity: .11 });
+[2.15, 2.55, 2.95].forEach((r, ringIndex) => {
+  const points = [];
+  for (let i = 0; i <= 96; i++) {
+    const a = (i / 96) * Math.PI * 2;
+    points.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r * .52));
+  }
+  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), orbitMaterial.clone());
+  line.rotation.x = (ringIndex - 1) * .19;
+  line.rotation.z = (ringIndex - 1) * .11;
+  universe.add(line);
 });
 
-const particleCount = 72;
+const nodes = [];
+const pickMeshes = [];
+const radii = [2.2, 2.65, 2.95, 2.32, 2.72, 2.9];
+const heights = [.72, -.55, .05, .88, -.84, .34];
+
+interests.forEach((interest, i) => {
+  const angle = i * (Math.PI * 2 / interests.length) + .25;
+  const group = new THREE.Group();
+  group.position.set(
+    Math.cos(angle) * radii[i],
+    heights[i],
+    Math.sin(angle) * radii[i] * .48
+  );
+  group.userData.baseY = group.position.y;
+  group.userData.index = i;
+  group.userData.phase = i * 1.4;
+
+  const orb = new THREE.Mesh(
+    new THREE.SphereGeometry(.34, 26, 20),
+    new THREE.MeshStandardMaterial({
+      color: interest.color,
+      emissive: interest.color,
+      emissiveIntensity: .74,
+      roughness: .24,
+      metalness: .25
+    })
+  );
+  orb.userData.index = i;
+  group.add(orb);
+  pickMeshes.push(orb);
+
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(.5, .035, 10, 48),
+    new THREE.MeshBasicMaterial({ color: interest.color, transparent: true, opacity: .55 })
+  );
+  ring.rotation.x = Math.PI * (.28 + (i % 3) * .09);
+  ring.rotation.y = i * .22;
+  ring.userData.index = i;
+  group.add(ring);
+  pickMeshes.push(ring);
+
+  const hitArea = new THREE.Mesh(
+    new THREE.SphereGeometry(.62, 10, 8),
+    new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+  );
+  hitArea.userData.index = i;
+  group.add(hitArea);
+  pickMeshes.push(hitArea);
+
+  const glow = createGlow(interest.color, 1.75, .23);
+  glow.userData.index = i;
+  group.add(glow);
+
+  const label = makeLabel(interest.title, i, interest.color);
+  label.position.set(0, -.78, 0);
+  group.add(label);
+
+  const stem = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(-group.position.x, -group.position.y, -group.position.z)
+    ]),
+    new THREE.LineBasicMaterial({ color: interest.color, transparent: true, opacity: .14 })
+  );
+  group.add(stem);
+
+  nodes.push({ group, orb, ring, glow, label });
+  universe.add(group);
+});
+
+const particleCount = 115;
 const positions = new Float32Array(particleCount * 3);
 for (let i = 0; i < particleCount; i++) {
-  const r = 3.2 + Math.random() * 2.7;
+  const r = 3.5 + Math.random() * 3.8;
   const a = Math.random() * Math.PI * 2;
   positions[i * 3] = Math.cos(a) * r;
-  positions[i * 3 + 1] = (Math.random() - 0.5) * 5.5;
-  positions[i * 3 + 2] = Math.sin(a) * r * 0.58;
+  positions[i * 3 + 1] = (Math.random() - .5) * 6.3;
+  positions[i * 3 + 2] = Math.sin(a) * r * .72;
 }
 const particleGeometry = new THREE.BufferGeometry();
 particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 const particles = new THREE.Points(
   particleGeometry,
-  new THREE.PointsMaterial({ color: 0x87d7ff, size: 0.035, transparent: true, opacity: 0.55, sizeAttenuation: true })
+  new THREE.PointsMaterial({ color: 0xb8c4ff, size: .035, transparent: true, opacity: .55, sizeAttenuation: true })
 );
 scene.add(particles);
 
@@ -192,28 +333,37 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let selectedIndex = 0;
 let dragging = false;
-let pointerDown = { x: 0, y: 0 };
-let lastPointer = { x: 0, y: 0 };
-let targetRotationY = -0.35;
-let targetRotationX = -0.08;
 let idle = true;
+let down = { x: 0, y: 0 };
+let last = { x: 0, y: 0 };
+let targetRotationY = -.35;
+let targetRotationX = -.08;
 let toastTimer;
 
-function selectStage(index, haptic = true) {
-  selectedIndex = index;
-  const stage = stages[index];
-  els.stagePill.textContent = `${stage.name} · ${stage.count}`;
-  els.stageTitle.textContent = stage.name;
-  els.stageCount.textContent = stage.count;
-  els.stageValue.textContent = stage.value;
-  els.stageConversion.textContent = stage.conversion;
-  els.stageAction.textContent = stage.action;
-  els.stageTip.textContent = stage.tip;
-  els.progressBar.style.width = `${stage.progress}%`;
-  els.progressBar.style.background = `linear-gradient(90deg, #${new THREE.Color(stage.color).getHexString()}, #bdeeff)`;
+function setTags(tags) {
+  els.tagList.replaceChildren(...tags.map(tag => {
+    const span = document.createElement('span');
+    span.className = 'tag';
+    span.textContent = tag;
+    return span;
+  }));
+}
 
-  stageGroups.forEach((group, i) => {
-    group.userData.targetScale = i === index ? 1.18 : 1;
+function selectInterest(index, haptic = true) {
+  selectedIndex = index;
+  const interest = interests[index];
+  els.interestPill.textContent = interest.title;
+  els.interestIcon.textContent = interest.icon;
+  els.interestTitle.textContent = interest.title;
+  els.interestNumber.textContent = String(index + 1).padStart(2, '0');
+  els.interestText.textContent = interest.text;
+  setTags(interest.tags);
+
+  nodes.forEach((node, i) => {
+    node.group.userData.targetScale = i === index ? 1.28 : 1;
+    node.label.material.opacity = i === index ? 1 : .7;
+    node.ring.material.opacity = i === index ? .95 : .42;
+    node.glow.material.opacity = i === index ? .5 : .2;
   });
 
   if (haptic && inTelegram) {
@@ -223,10 +373,10 @@ function selectStage(index, haptic = true) {
 
 function resize() {
   const rect = els.sceneCard.getBoundingClientRect();
-  const width = Math.max(1, rect.width);
-  const height = Math.max(1, rect.height);
-  renderer.setSize(width, height, false);
-  camera.aspect = width / height;
+  const w = Math.max(1, rect.width);
+  const h = Math.max(1, rect.height);
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
   camera.updateProjectionMatrix();
 }
 
@@ -235,58 +385,53 @@ function pick(clientX, clientY) {
   pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
   pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
-  const hits = raycaster.intersectObjects(stageMeshes, false);
-  if (hits.length) selectStage(hits[0].object.userData.stageIndex);
+  const hits = raycaster.intersectObjects(pickMeshes, false);
+  if (hits.length) selectInterest(hits[0].object.userData.index);
 }
 
-els.canvas.addEventListener('pointerdown', (event) => {
+els.canvas.addEventListener('pointerdown', event => {
   dragging = true;
   idle = false;
-  pointerDown = { x: event.clientX, y: event.clientY };
-  lastPointer = { ...pointerDown };
+  down = { x: event.clientX, y: event.clientY };
+  last = { ...down };
   els.canvas.setPointerCapture?.(event.pointerId);
 });
 
-els.canvas.addEventListener('pointermove', (event) => {
+els.canvas.addEventListener('pointermove', event => {
   if (!dragging) return;
-  const dx = event.clientX - lastPointer.x;
-  const dy = event.clientY - lastPointer.y;
-  targetRotationY += dx * 0.009;
-  targetRotationX = THREE.MathUtils.clamp(targetRotationX + dy * 0.0045, -0.34, 0.24);
-  lastPointer = { x: event.clientX, y: event.clientY };
+  const dx = event.clientX - last.x;
+  const dy = event.clientY - last.y;
+  targetRotationY += dx * .009;
+  targetRotationX = THREE.MathUtils.clamp(targetRotationX + dy * .004, -.34, .24);
+  last = { x: event.clientX, y: event.clientY };
 });
 
 function finishPointer(event) {
   if (!dragging) return;
-  const distance = Math.hypot(event.clientX - pointerDown.x, event.clientY - pointerDown.y);
+  const distance = Math.hypot(event.clientX - down.x, event.clientY - down.y);
   dragging = false;
-  window.setTimeout(() => { idle = true; }, 1200);
-  if (distance < 9) pick(event.clientX, event.clientY);
+  window.setTimeout(() => { idle = true; }, 1400);
+  if (distance < 10) pick(event.clientX, event.clientY);
 }
 els.canvas.addEventListener('pointerup', finishPointer);
 els.canvas.addEventListener('pointercancel', () => { dragging = false; idle = true; });
 
 els.resetButton.addEventListener('click', () => {
-  targetRotationY = -0.35;
-  targetRotationX = -0.08;
-  selectStage(0);
+  targetRotationY = -.35;
+  targetRotationX = -.08;
+  selectInterest(0);
 });
 
-els.telegramButton.addEventListener('click', () => {
-  const stage = stages[selectedIndex];
-  const payload = { type: 'pipeline_stage', stage: stage.name, count: stage.count, value: stage.value };
-
+els.exploreButton.addEventListener('click', () => {
+  const interest = interests[selectedIndex];
   if (inTelegram) {
     try {
       tg.HapticFeedback?.impactOccurred('medium');
-      tg.sendData(JSON.stringify(payload));
+      tg.sendData(JSON.stringify({ type: 'interest', interest: interest.title, tags: interest.tags }));
       return;
-    } catch (_) {
-      showToast('Le payload Telegram est prêt, mais ce mode de lancement ne permet pas sendData.');
-    }
-  } else {
-    showToast(`Simulation → ${JSON.stringify(payload)}`);
+    } catch (_) {}
   }
+  showToast(`${interest.title} · ${interest.tags.join(' · ')}`);
 });
 
 function showToast(message) {
@@ -299,28 +444,30 @@ function showToast(message) {
 const resizeObserver = new ResizeObserver(resize);
 resizeObserver.observe(els.sceneCard);
 window.visualViewport?.addEventListener('resize', resize);
-window.addEventListener('orientationchange', () => window.setTimeout(resize, 200));
+window.addEventListener('orientationchange', () => window.setTimeout(resize, 180));
 
 let lastTime = performance.now();
 function animate(now) {
-  const dt = Math.min((now - lastTime) / 1000, 0.033);
+  const dt = Math.min((now - lastTime) / 1000, .033);
   lastTime = now;
 
-  if (idle && !dragging) targetRotationY += dt * 0.10;
-  root.rotation.y = THREE.MathUtils.lerp(root.rotation.y, targetRotationY, 0.075);
-  root.rotation.x = THREE.MathUtils.lerp(root.rotation.x, targetRotationX, 0.075);
+  if (idle && !dragging) targetRotationY += dt * .075;
+  universe.rotation.y = THREE.MathUtils.lerp(universe.rotation.y, targetRotationY, .065);
+  universe.rotation.x = THREE.MathUtils.lerp(universe.rotation.x, targetRotationX, .065);
 
-  core.rotation.x += dt * 0.20;
-  core.rotation.y += dt * 0.32;
-  coreWire.rotation.x -= dt * 0.15;
-  coreWire.rotation.y += dt * 0.22;
-  particles.rotation.y -= dt * 0.018;
+  core.rotation.x += dt * .19;
+  core.rotation.y += dt * .27;
+  coreWire.rotation.x -= dt * .12;
+  coreWire.rotation.y += dt * .18;
+  particles.rotation.y -= dt * .012;
 
-  stageGroups.forEach((group, i) => {
-    const targetScale = group.userData.targetScale ?? (i === selectedIndex ? 1.18 : 1);
-    const s = THREE.MathUtils.lerp(group.scale.x, targetScale, 0.09);
-    group.scale.setScalar(s);
-    group.position.y = group.userData.baseY + Math.sin(now * 0.0014 + i * 1.7) * 0.06;
+  nodes.forEach((node, i) => {
+    const target = node.group.userData.targetScale ?? (i === selectedIndex ? 1.28 : 1);
+    const s = THREE.MathUtils.lerp(node.group.scale.x, target, .085);
+    node.group.scale.setScalar(s);
+    node.group.position.y = node.group.userData.baseY + Math.sin(now * .0012 + node.group.userData.phase) * .055;
+    node.orb.rotation.y += dt * (.24 + i * .025);
+    node.ring.rotation.z += dt * (.12 + (i % 2) * .05);
   });
 
   renderer.render(scene, camera);
@@ -331,5 +478,5 @@ document.addEventListener('visibilitychange', () => {
   renderer.setAnimationLoop(document.hidden ? null : animate);
 });
 
-selectStage(0, false);
+selectInterest(0, false);
 resize();
