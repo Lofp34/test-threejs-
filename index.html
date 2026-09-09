@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-  <meta name="theme-color" content="#07111f" />
+  <meta name="theme-color" content="#050816" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="CRM 3D" />
-  <title>Telegram × Three.js — CRM 3D</title>
+  <meta name="apple-mobile-web-app-title" content="Mes univers 3D" />
+  <title>Mes centres d’intérêt — Three.js</title>
   <link rel="stylesheet" href="./styles.css" />
 
   <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
-
   <script type="importmap">
   {
     "imports": {
@@ -24,62 +23,46 @@
   <main class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">TELEGRAM MINI APP × THREE.JS</p>
-        <h1>Cockpit commercial 3D</h1>
+        <p class="eyebrow">CARTE PERSONNELLE × THREE.JS</p>
+        <h1>Mes univers</h1>
+        <p class="subtitle">Ce qui me donne envie de construire, apprendre et transmettre.</p>
       </div>
-      <div id="runtimeBadge" class="runtime-badge">Safari</div>
+      <div id="runtimeBadge" class="runtime-badge">iPhone</div>
     </header>
 
-    <section id="sceneCard" class="scene-card" aria-label="Pipeline commercial 3D interactif">
-      <div id="stagePill" class="stage-pill">Prospects · 48</div>
-      <canvas id="scene"></canvas>
-      <div class="gesture-hint" aria-hidden="true">
-        <span>↔</span>
-        Glisse pour tourner · touche une étape
+    <section id="sceneCard" class="scene-card" aria-label="Carte 3D interactive de mes centres d’intérêt">
+      <div class="scene-topline">
+        <div id="interestPill" class="interest-pill">IA générative</div>
+        <div class="live-dot"><i></i> 6 univers</div>
       </div>
+      <canvas id="scene"></canvas>
+      <div class="gesture-hint" aria-hidden="true"><span>↔</span> Tourne · touche un univers</div>
     </section>
 
     <section class="detail-card" aria-live="polite">
       <div class="detail-heading">
-        <div>
-          <p class="detail-kicker">ÉTAPE SÉLECTIONNÉE</p>
-          <h2 id="stageTitle">Prospects</h2>
+        <div class="icon-wrap" id="interestIcon">✦</div>
+        <div class="heading-copy">
+          <p class="detail-kicker">UNIVERS SÉLECTIONNÉ</p>
+          <h2 id="interestTitle">IA générative</h2>
         </div>
-        <strong id="stageCount" class="metric">48</strong>
+        <strong id="interestNumber" class="interest-number">01</strong>
       </div>
 
-      <div class="progress-track" aria-hidden="true">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
+      <p id="interestText" class="interest-text">Comprendre les modèles, tester les usages réels et transformer l’IA en avantage opérationnel.</p>
 
-      <div class="stats-grid">
-        <div class="stat">
-          <span>Valeur</span>
-          <strong id="stageValue">312 k€</strong>
-        </div>
-        <div class="stat">
-          <span>Conversion</span>
-          <strong id="stageConversion">—</strong>
-        </div>
-        <div class="stat">
-          <span>À traiter</span>
-          <strong id="stageAction">12</strong>
-        </div>
-      </div>
-
-      <p id="stageTip" class="tip">12 prospects sont sans prochaine action planifiée.</p>
+      <div id="tagList" class="tag-list"></div>
 
       <div class="actions">
-        <button id="resetButton" class="button button-secondary" type="button">Recentrer</button>
-        <button id="telegramButton" class="button button-primary" type="button">Tester Telegram</button>
+        <button id="resetButton" class="button button-secondary" type="button">Vue globale</button>
+        <button id="exploreButton" class="button button-primary" type="button">Explorer cet univers</button>
       </div>
     </section>
 
-    <p class="footer-note">Démo statique · aucun backend · pensée pour 390 × 844 px</p>
+    <p class="footer-note">Prototype personnel · Three.js · tactile · optimisé iPhone 12 Pro</p>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
   <script type="module" src="./app.js"></script>
 </body>
 </html>
